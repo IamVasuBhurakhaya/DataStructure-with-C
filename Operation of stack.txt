@@ -1,0 +1,92 @@
+Operation of stack
+• Push 2. Pop 3. Is Empty 4. Is Full
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#define MAX 100 // Maximum size of the stack
+// Stack structure
+typedef struct {
+ int items[MAX];
+ int top;
+} Stack;
+// Function to initialize the stack
+void initStack(Stack *s) {
+ s->top = -1; // Indicates an empty stack
+}
+// Function to check if the stack is empty
+bool isEmpty(Stack *s) {
+ return s->top == -1;
+}
+// Function to check if the stack is full
+bool isFull(Stack *s) {
+ return s->top == MAX - 1;
+}
+// Function to push an element onto the stack
+void push(Stack *s, int value) {
+ if (isFull(s)) {
+ printf("Stack overflow\n");
+ return;
+ }
+ s->items[++s->top] = value;
+ printf("Pushed %d onto the stack\n", value);
+}
+// Function to pop an element from the stack
+int pop(Stack *s) {
+ if (isEmpty(s)) {
+ printf("Stack underflow\n");
+ return -1; // Return -1 to indicate error
+ }
+ return s->items[s->top--];
+}
+// Function to get the top element of the stack
+int peek(Stack *s) {
+ if (isEmpty(s)) {
+ printf("Stack is empty\n");
+ return -1; // Return -1 to indicate error
+ }
+ return s->items[s->top];
+}
+// Function to get the size of the stack
+int size(Stack *s) {
+ return s->top + 1;
+}
+// Main function
+int main() {
+ Stack s;
+ initStack(&s); // Initialize the stack
+ // Push elements onto the stack
+ push(&s, 5);
+ push(&s, 10);
+ push(&s, 15);
+ // Display the stack state before popping
+ printf("\nStack before pop operations:\n");
+ printf("Top element: %d\n", peek(&s)); // Should print 15
+ printf("Stack size: %d\n", size(&s)); // Should print 3
+ // Pop the top element from the stack
+ printf("\nPopped element: %d\n", pop(&s)); // Should print 15
+ // Display the stack state after one pop
+ printf("\nStack after one pop operation:\n");
+ if (!isEmpty(&s)) {
+ printf("Top element: %d\n", peek(&s)); // Should print 10
+ }
+ printf("Stack size: %d\n", size(&s)); // Should print 2
+ // Perform another pop operation
+ printf("\nPopped element: %d\n", pop(&s)); // Should print 10
+ // Display the state of the stack after another pop
+ printf("\nStack after another pop operation:\n");
+ if (!isEmpty(&s)) {
+ printf("Top element: %d\n", peek(&s)); // Should print 5
+ }
+ printf("Stack size: %d\n", size(&s)); // Should print 1
+ // Perform a final pop operation
+ printf("\nPopped element: %d\n", pop(&s)); // Should print 5
+ // Check if the stack is empty after the final pop
+ printf("\nStack after final pop operation:\n");
+ if (isEmpty(&s)) {
+ printf("The stack is empty.\n");
+ } else {
+ printf("Top element: %d\n", peek(&s));
+ printf("Stack size: %d\n", size(&s));
+ }
+ return 0;
+}

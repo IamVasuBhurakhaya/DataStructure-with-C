@@ -1,0 +1,99 @@
+4 ) Multiple stack
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#define MAX 100 // Maximum size of the queue
+// Queue structure
+typedef struct {
+ int items[MAX];
+ int front, rear, size;
+} Queue;
+// Function to initialize the queue
+void initQueue(Queue *q) {
+ q->front = 0;
+ q->rear = -1;
+ q->size = 0;
+}
+// Function to check if the queue is empty
+bool isEmpty(Queue *q) {
+ return q->size == 0;
+}
+// Function to check if the queue is full
+bool isFull(Queue *q) {
+ return q->size == MAX;
+}
+// Function to add an element to the queue
+void enqueue(Queue *q, int value) {
+ if (isFull(q)) {
+ printf("Queue is full\n");
+ return;
+ }
+ q->rear = (q->rear + 1) % MAX;
+ q->items[q->rear] = value;
+ q->size++;
+ printf("Enqueued %d\n", value);
+}
+// Function to remove an element from the queue
+int dequeue(Queue *q) {
+ if (isEmpty(q)) {
+ printf("Queue is empty\n");
+ return -1; // Return -1 to indicate error
+ }
+ int value = q->items[q->front];
+ q->front = (q->front + 1) % MAX;
+ q->size--;
+ return value;
+}
+// Function to get the front element of the queue
+int front(Queue *q) {
+ if (isEmpty(q)) {
+ printf("Queue is empty\n");
+ return -1; // Return -1 to indicate error
+ }
+ return q->items[q->front];
+}
+// Function to get the size of the queue
+int size(Queue *q) {
+ return q->size;
+}
+// Main function
+int main() {
+ Queue q;
+ initQueue(&q); // Initialize the queue
+ // Enqueue elements into the queue
+ enqueue(&q, 10);
+ enqueue(&q, 20);
+ enqueue(&q, 30);
+ // Display the queue state
+ printf("\nQueue state:\n");
+ printf("Front element: %d\n", front(&q)); // Should print 10
+ printf("Queue size: %d\n", size(&q)); // Should print 3
+ // Dequeue an element from the queue
+ printf("\nDequeued element: %d\n", dequeue(&q)); // Should print 10
+ // Display the queue state after one dequeue
+ printf("\nQueue state after one dequeue:\n");
+ if (!isEmpty(&q)) {
+ printf("Front element: %d\n", front(&q)); // Should print 20
+ }
+ printf("Queue size: %d\n", size(&q)); // Should print 2
+ // Perform another dequeue operation
+ printf("\nDequeued element: %d\n", dequeue(&q)); // Should print 20
+ // Display the queue state after another dequeue
+ printf("\nQueue state after another dequeue:\n");
+ if (!isEmpty(&q)) {
+ printf("Front element: %d\n", front(&q)); // Should print 30
+ }
+ printf("Queue size: %d\n", size(&q)); // Should print 1
+ // Perform a final dequeue operation
+ printf("\nDequeued element: %d\n", dequeue(&q)); // Should print 30
+ // Check if the queue is empty after the final dequeue
+ printf("\nQueue state after final dequeue:\n");
+ if (isEmpty(&q)) {
+ printf("The queue is empty.\n");
+ } else {
+ printf("Front element: %d\n", front(&q));
+ printf("Queue size: %d\n", size(&q));
+ }
+
+  return 0;
+}

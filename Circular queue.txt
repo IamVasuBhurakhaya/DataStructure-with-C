@@ -1,0 +1,93 @@
+) Circular queue
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+typedef struct {
+ int *data;
+ int front;
+ int rear;
+ int capacity;
+ int count;
+} CircularQueue;
+// Function prototypes
+CircularQueue* createQueue(int size);
+bool enqueue(CircularQueue *queue, int value);
+int dequeue(CircularQueue *queue);
+bool isEmpty(CircularQueue *queue);
+bool isFull(CircularQueue *queue);
+void printQueue(CircularQueue *queue);
+void freeQueue(CircularQueue *queue);
+CircularQueue* createQueue(int size) {
+ CircularQueue *queue = (CircularQueue *)malloc(sizeof(CircularQueue));
+ queue->data = (int *)malloc(size * sizeof(int));
+ queue->front = 0;
+ queue->rear = -1;
+ queue->capacity = size;
+ queue->count = 0;
+ return queue;
+}
+bool enqueue(CircularQueue *queue, int value) {
+ if (isFull(queue)) {
+ fprintf(stderr, "Queue is full\n");
+ return false;
+ }
+ queue->rear = (queue->rear + 1) % queue->capacity;
+ queue->data[queue->rear] = value;
+ queue->count++;
+ return true;
+}
+int dequeue(CircularQueue *queue) {
+ if (isEmpty(queue)) {
+ fprintf(stderr, "Queue is empty\n");
+ return -1;
+ }
+ int value = queue->data[queue->front];
+ queue->front = (queue->front + 1) % queue->capacity;
+ queue->count--;
+ return value;
+}
+bool isEmpty(CircularQueue *queue) {
+ return queue->count == 0;
+}
+bool isFull(CircularQueue *queue) {
+ return queue->count == queue->capacity;
+}
+void printQueue(CircularQueue *queue) {
+ if (isEmpty(queue)) {
+ printf("Queue is empty\n");
+ return;
+ }
+ printf("Queue elements: ");
+ for (int i = 0; i < queue->count; ++i) {
+ printf("%d ", queue->data[(queue->front + i) % queue->capacity]);
+ }
+ printf("\n");
+}
+void freeQueue(CircularQueue *queue) {
+ free(queue->data);
+ free(queue);
+}
+int main() {
+ CircularQueue *cq = createQueue(5); // Queue with capacity 5
+ // Enqueue some values
+ enqueue(cq, 10);
+ enqueue(cq, 20);
+ enqueue(cq, 30);
+ enqueue(cq, 40);
+ enqueue(cq, 50);
+ // Print queue
+ printQueue(cq);
+ // Dequeue some values
+ printf("Dequeued: %d\n", dequeue(cq));
+ printf("Dequeued: %d\n", dequeue(cq));
+ // Print queue after dequeuing
+ printQueue(cq);
+ // Enqueue more values
+ enqueue(cq, 60);
+ enqueue(cq, 70);
+ // Print queue after enqueuing more values
+ printQueue(cq);
+ // Free the allocated memory
+ freeQueue(cq);
+ return 0;
+}
